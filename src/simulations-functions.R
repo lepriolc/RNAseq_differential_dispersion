@@ -21,6 +21,8 @@ create_effect_size_vector <- function(length, pct, pct_down, base, param, runif_
     # effect size = runif() with min=1 and max=base effect
     neg.effect.size <- runif(nb_neg_genes, 1, base)
     ## inverse for the values for half of the effect sizes
+    # genes_down <- floor(nb_neg_genes/2)
+    # neg.effect.size[1:genes_down] <- unlist(lapply(neg.effect.size[1:genes_down], function(x) { 1/x }))
     genes_down <- floor(pct_down * nb_neg_genes)
     if (genes_down > 0) {
       neg.effect.size[1:genes_down] <- unlist(lapply(neg.effect.size[1:genes_down], function(x) { 1/x }))
@@ -107,18 +109,18 @@ add_contingency_category <- function(results_df, pval_colname, label_colname, th
 
 add_DD_performance_to_results <- function(results, annot, FC, threshold, disp_colname, pval_colname) {
   features_in_results <- rownames(results)
-  # add labels to results
+  ### add labels to results
   log_FC <- log(FC, 2)
   labels.DD <- ifelse(abs(log(annot[features_in_results, sprintf("%s.S2", disp_colname)]/annot[features_in_results, sprintf("%s.S1", disp_colname)], 2)) > log_FC, 1, 0)
   results <- cbind(results, labels.DD)
-  # add true DD category, i.e. either DD+, DD- or nonDD
+  ### add true DD category, i.e. either DD+, DD- or nonDD
   category.DD <- c()
   for (feature in rownames(results)) {
     trueFC.dispersion <- log(annot[feature, sprintf("%s.S2", disp_colname)] / annot[feature, sprintf("%s.S1", disp_colname)], 2)
     category.DD <- c(category.DD, DD_category(trueFC.dispersion, log_FC, "DD"))
   }
   results <- cbind(results, category.DD)
-  # add confusion matrix categories (TP, FP, TN, FN) to results
+  ### add confusion matrix categories (TP, FP, TN, FN) to results
   results <- add_contingency_category(results, pval_colname, "labels.DD", threshold)
   return(results)
 }

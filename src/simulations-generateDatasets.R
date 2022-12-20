@@ -15,7 +15,7 @@ min_depth_param <- max_depth_param <- 1
 DE_fraction <- 0
 # DE_fraction <- 0
 DE_down_fraction <-  0.5 # fraction of DE with a decrease of mean in the second condition
-DE_base_effect <- 1.5
+DE_base_effect <- 1.3
 non_DE_runif_FC <- TRUE # generate FC for non DE genes using runif() function
 # DD genes
 DD_fraction <- 0.5
